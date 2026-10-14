@@ -30,7 +30,28 @@
 - Cleaners clean after each break and should lock when finished.
 - Pupils can sign out a key from reception between lessons if they need the toilet.
 - **No step verifies that the door is actually locked after any handover.** Reception accepts a returned key without knowing the state of the door.
-
+## As-Is Process Map
+```mermaid
+flowchart LR
+  subgraph ST["Site team"]
+    A["Stopped locking right after break<br/>assumes cleaners will lock"]
+  end
+  subgraph CL["Cleaners"]
+    B["Clean after break<br/>assume site team will lock"]
+  end
+  subgraph PU["Pupils"]
+    C["Sign out key, leave door open,<br/>return key"]
+  end
+  subgraph RC["Reception"]
+    D["Accepts key back<br/>door state not checked"]
+  end
+  A -. assumes .-> B
+  B -. assumes .-> A
+  A --> X["Toilet left unlocked"]
+  B --> X
+  C --> D --> X
+  X --> Y["Pupils hide during lessons"]
+```
 ### Observations
 
 - Three groups (site team, cleaners, pupils) touch the same door, with no single owner of the final lock.
@@ -69,7 +90,39 @@ Each group relies on the other to finish the job:
 | 3 | After the lesson change (about 12:05) | Site team | Check the toilets, tick the clipboard, lock anything left open. |
 | 4 | Key out 10+ minutes during lesson time | Reception | Radio the site team (whoever is free; named backup if no answer) and log it on EVERY, the school's issue-logging system. |
 | 5 | End of day | Reception, headteacher's PA | Compare the site team clipboard with the key sign-out sheet; flag inconsistencies. |
-
+## To-Be Process Map
+```mermaid
+flowchart TD
+  subgraph ST["Site team"]
+    A["Lock toilets as pupils go to class<br/>11:15 and 2:05"]
+    D["Check toilets after lesson change<br/>about 12:05"]
+    E{"Locked?"}
+    F["Lock it and tick clipboard"]
+    G["Tick clipboard: locked"]
+    H["Respond to radio check<br/>whoever is free, named backup"]
+  end
+  subgraph CL["Cleaners"]
+    B["Unlock and clean"]
+    C["Lock door by 11:50<br/>owner of the final lock"]
+  end
+  subgraph RC["Reception"]
+    K{"Key out 10+ min<br/>in lesson time?"}
+    L["Radio site team<br/>and log on EVERY"]
+    M["End of day: compare clipboard<br/>with key sign-out sheet"]
+  end
+  subgraph PA["Headteacher's PA"]
+    N["Record and flag inconsistencies"]
+    O["Staff issues to site and cleaning managers<br/>Pupil behaviour to pastoral lead"]
+  end
+  A --> B --> C --> D --> E
+  E -- Yes --> G
+  E -- No --> F
+  F --> M
+  G --> M
+  K -- Yes --> L --> H
+  L --> M
+  M --> N --> O
+```
 ### Escalation
 
 - **Staff process lapses** go to the head of site team and the cleaning manager.
